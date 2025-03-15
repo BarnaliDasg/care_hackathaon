@@ -27,6 +27,17 @@ function checklikeStatus($post_id){
     return mysqli_fetch_assoc($run)['row'];
 }
 
+//function checkcomment status
+function checkcommentStatus($post_id){
+    global $db;
+
+    $current_user=$_SESSION['userdata']['id'];
+    $query="SELECT count(*) as row FROM  comments WHERE u_id=$current_user && post_id=$post_id";
+    
+    $run = mysqli_query($db, $query);
+    return mysqli_fetch_assoc($run)['row'];
+}
+
 //function for like
 function like($post_id){
     global $db;
@@ -588,28 +599,21 @@ function getPostbyId($u_id) {
 }
 
 //add comment
-function addComment($db, $post_id, $user_id, $comment_text) {
-    // Debug log
-    file_put_contents("debug_log.txt", "Function addComment() Called\n", FILE_APPEND);
 
-    // Escape special characters to prevent SQL Injection
-    $comment_text = mysqli_real_escape_string($db, $comment_text);
 
-    // Prepare SQL Query
-    $query = "INSERT INTO comments (user_id, post_id, comment) VALUES ('$user_id', '$post_id', '$comment_text')";
+
+function addComment($post_id, $comment_text) {
+    global $db;
+    $user_id = $_SESSION['userdata']['id'];
     
-    // Execute Query
-    $run = mysqli_query($db, $query);
+    $post_id = intval($post_id); // Ensure post_id is a valid integer
+    $text = mysqli_real_escape_string($db, trim($comment_text)); 
 
-    // Check for errors
-    if ($run) {
-        file_put_contents("debug_log.txt", "Comment Inserted Successfully\n", FILE_APPEND);
-        return ["status" => "success", "message" => "Comment added successfully!"];
-    } else {
-        file_put_contents("debug_log.txt", "MySQL Error: " . mysqli_error($db) . "\n", FILE_APPEND);
-        return ["status" => "error", "message" => "Failed to add comment."];
-    }
+    $query = "INSERT INTO comments (user_id, post_id, comment) VALUES ('$user_id', '$post_id', '$text')";
+    
+    return mysqli_query($db, $query) ? true : mysqli_error($db);
 }
+
 
 //get comment
 function getComments($post_id) {
@@ -630,18 +634,23 @@ function getComments($post_id) {
     return mysqli_fetch_all($result, MYSQLI_ASSOC);
 }
 
-function getUsersByPincode($pincode) {
-    global $db; // Use $db instead of $conn
+//search user by pincode
+function searchUsersByPincode($pincode) {
+    global $db;
 
-    // Prepare the SQL statement
-    $stmt = $db->prepare("SELECT fname, lname, profile_pic FROM users WHERE pincode = ?");
-    $stmt->bind_param("s", $pincode); // Bind parameter (string type)
-    $stmt->execute();
-    
-    // Get result
-    $result = $stmt->get_result();
-    return $result->fetch_all(MYSQLI_ASSOC); // Fetch as associative array
+    $query = "SELECT id, fname, lname, uname, profile_pic, role FROM user WHERE pincode = ?";
+    $stmt = mysqli_prepare($db, $query);
+    mysqli_stmt_bind_param($stmt, "s", $pincode);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+
+    $users = [];
+    while ($row = mysqli_fetch_assoc($result)) {
+        $users[] = $row;
+    }
+    return $users;
 }
+
 
 
 

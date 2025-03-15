@@ -102,25 +102,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['post_id'], $_POST['com
 }
 
 //search
-if (isset($_POST['pincode'])) {
-    $pincode = $_POST['pincode'];
-    $users = getUsersByPincode($pincode); // Call function to get users
+// Search Users by Pincode
+if (isset($_GET['searchPincode'])) {
+    require_once __DIR__ . '/../php/actions.php';
 
-    if (!empty($users)) {
-        echo "<h3>Users in Pincode: $pincode</h3><ul class='list-group'>";
-        foreach ($users as $user) {
-            echo "<li class='list-group-item d-flex align-items-center'>
-                    <img src='assets/images/profile/" . $user['profile_pic'] . "' width='50' height='50' class='rounded-circle me-3'>
-                    <div>
-                        <strong>" . $user['fname'] . " " . $user['lname'] . "</strong><br>
-                        <small>" . $user['email'] . " | " . $user['phone'] . "</small>
-                    </div>
-                  </li>";
+    $pincode = trim($_POST['pincode']);
+    $response = ['status' => false, 'users' => []];
+
+    if (!empty($pincode)) {
+        $users = searchUsersByPincode($pincode); // Ensure this function is properly defined
+
+        if (!empty($users)) {
+            $response['status'] = true;
+            $response['users'] = $users;
         }
-        echo "</ul>";
-    } else {
-        echo "<p class='text-danger'>No users found in this pincode.</p>";
     }
+
+    echo json_encode($response);
+    exit;
 }
+
+
+
+
 
 

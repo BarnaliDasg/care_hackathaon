@@ -78,58 +78,92 @@ global $user;
                         <div class="modal-body p-0">
                             <div class="row no-gutters">
                                 
-                                <!-- Left Side: Post Image -->
-                                <div class="col-md-6">
-                                    <img src="assets/images/posts/<?=$post['post_img']?>" class="img-fluid rounded-left w-100" alt="Post Image">
-                                </div>
-
-                                <!-- Right Side: Comments Section -->
-                                <div class="col-md-6 d-flex flex-column">
-                                    
-                                    <!-- User Info -->
-                                    <div class="p-3 border-bottom d-flex align-items-center">
-                                        <img src="assets/images/profile/<?=$profile['profile_pic']?>" class="rounded-circle mr-2" width="35" height="35" alt="User">
-                                        <div>
-                                            <span class="text-secondary" style="font-size: larger;"><?= $profile['fname'] ?> <?= $profile['lname'] ?></span><br>
-
-                                             <span class="text-secondary">@<?= $profile['uname'] ?></span>
+                            <div class="container mt-4">
+                                <div class="row">
+                                    <!-- Left Side: Image & Post Details -->
+                                    <div class="col-md-6">
+                                        <img src="assets/images/posts/<?=$post['post_img']?>" class="img-fluid rounded" alt="Post Image" style="height: 500px;">
+                                        
+                                        <!-- Post Details -->
+                                        <div class="mt-3 p-3 border rounded bg-light">
+                                            <p><strong>Address:</strong> <?= htmlspecialchars($post['post_address']) ?></p>
+                                            <p><strong>Pincode:</strong> <?= htmlspecialchars($post['post_pincode']) ?></p>
+                                            <p><strong>Post:</strong> <?= htmlspecialchars($post['post_txt']) ?></p>
                                         </div>
+
+                                        <h4 style="font-size: x-larger" class="p-2 border-bottom">
+                                            <span>
+                                                <?php
+                                                    if(checklikeStatus($post['id'])){
+                                                        $like_btn_display = 'none';
+                                                        $unlike_btn_display = '';
+                                                    } else {
+                                                        $unlike_btn_display = 'none';
+                                                        $like_btn_display = '';
+                                                    }
+                                                ?>
+                                                <i class="fa fa-heart unlike_btn" style="display:<?=$unlike_btn_display?>" data-post-id="<?=$post['id']?>"></i>
+                                                <i class="far fa-heart like_btn" style="display:<?=$like_btn_display?>" data-post-id="<?=$post['id']?>"></i>
+                                                <?php 
+                                                $likes = getLikes($post['id']);
+                                                echo count($likes)?>
+                                            </span>
+                                            &nbsp;&nbsp;<i class="far fa-comment"></i><br>
+                                        </h4>
+
                                     </div>
 
-                                    <!-- Comments Section -->
-                                     <div>
-                                            <?php 
-                                                $comments = getComments($post['id']); // Get comments for post with ID 5
+                                    <!-- Right Side: Comments Section -->
+                                    <div class="col-md-6 d-flex flex-column">
+                                        <!-- Post Author -->
+                                        <div class="p-3 border-bottom d-flex align-items-center bg-white rounded mx-1 px-3">
+                                            <img src="assets/images/profile/<?=$profile['profile_pic']?>" class="rounded-circle me-2" width="40" height="40" alt="User">
+                                        <div>
 
+                                                <span class="fw-bold mx-2"><b><?= $profile['fname'] ?> <?= $profile['lname'] ?></b></span><br>
+                                                <small class="text-muted mx-3">@<?= $profile['uname'] ?></small>
+                                            </div>
+                                        </div>
+
+                                        <!-- Comments Section -->
+                                        <div class="flex-grow-1 overflow-auto p-3 border rounded" style="height: 600px;">
+                                            <?php 
+                                                $comments = getComments($post['id']);
                                                 foreach ($comments as $comment) {
-                                                    echo "<div class='comment-box'>";
-                                                    echo '<img class="rounded-circle mr-2" width="35" height="35" src="assets/images/profile/' . htmlspecialchars($comment['profile_pic']) . '" alt="Profile">';
-                                                    echo "<strong>" . htmlspecialchars($comment['fname'] . " " . $comment['lname']) . "</strong> ";
-                                                    echo "<span>@".$comment['uname']."</span>";
-                                                    echo "<p>" . htmlspecialchars($comment['comment']) . "</p>";
-                                                    echo "<small>" . $comment['created_at'] . "</small>";
-                                                    echo "</div>";
+                                                    echo '<div class="d-flex mb-3 p-2 bg-white rounded">';
+                                                    echo '<img class="rounded-circle me-2" width="35" height="35" src="assets/images/profile/' . htmlspecialchars($comment['profile_pic']) . '" alt="Profile">';
+                                                    echo '<div>';
+                                                    echo '<strong class="text-dark mx-2">' . htmlspecialchars($comment['fname'] . " " . $comment['lname']) . '</strong> ';
+                                                    echo '<span class="text-muted mx-1">@'.$comment['uname'].'</span>';
+                                                    echo '<p class="mb-1 mx-2">' . htmlspecialchars($comment['comment']) . '</p>';
+                                                    echo '<small class="text-muted mx-4">' . $comment['created_at'] . '</small>';
+                                                    echo '</div>';
+                                                    echo '</div>';
                                                 }
                                             ?>
-                                     </div>
-                                    
+                                        </div>
 
-
+                                        <!-- Add Comment Section -->
+                                        <div class="p-3 border-top bg-white rounded">
+                                            <form method="post" action="assets/php/actions.php?addComment">
+                                                <input type="hidden" name="post_id" value="<?= $post['id'] ?>">
+                                                <div class="d-flex align-items-center">
+                                                    <textarea class="form-control me-2" name="post_text" rows="1" placeholder="Write a comment..." style="resize: none;"></textarea>
+                                                    <button type="submit" class="btn btn-primary mx-2">Comment</button>
+                                                </div>
+                                            </form>
+                                        </div>
                                     </div>
-
-                                    <!-- Add Comment Box -->
-                                    <form class="comment-form" onsubmit="return addComment(event, <?= $post['id'] ?>)">
-                                        <input type="text" id="comment_text_<?= $post['id'] ?>" placeholder="Write a comment..." required>
-                                        <button type="submit">Comment</button>
-                                    </form>
-                                    <div id="comments_<?= $post['id'] ?>"></div>
-
-
-                            </div>
+                                </div>
+                                </div>
+                                </div> <!-- Row Ends -->
                         </div>
                     </div>
                 </div>
             </div>
+
+
+
         
             <?php } ?>
 

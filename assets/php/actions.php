@@ -198,30 +198,45 @@ if (isset($_GET['addpost'])) {
 }
 
 
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $post_id = $_POST["post_id"] ?? null;
-    $content = $_POST["content"] ?? null;
+if (isset($_GET['addComment'])) {
+    if (!empty($_POST['post_text']) && !empty($_POST['post_id'])) {  
+        $post_id = $_POST['post_id']; // Get post_id from form
+        $result = addComment($post_id, $_POST['post_text']);
 
-    if ($post_id && $content) {
-        if (addComment($post_id, $content)) {
-            echo json_encode(["status" => "success", "message" => "Comment added"]);
+        if ($result === true) {
+            // Redirect back to the same page
+            header("Location: " . $_SERVER['HTTP_REFERER']);
+            exit();
         } else {
-            echo json_encode(["status" => "error", "message" => "Failed to add comment"]);
+            echo $result; // Display error message if any
+            exit;
         }
     } else {
-        echo json_encode(["status" => "error", "message" => "Missing data"]);
+        showError('post_text'); // Call error function
+        exit;
     }
-} elseif ($_SERVER["REQUEST_METHOD"] === "GET") {
-    $post_id = $_GET["post_id"] ?? null;
-    if ($post_id) {
-        $comments = getComments($post_id);
-        echo json_encode(["status" => "success", "comments" => $comments]);
-    } else {
-        echo json_encode(["status" => "error", "message" => "Missing post_id"]);
-    }
-} else {
-    echo json_encode(["status" => "error", "message" => "Invalid request method"]);
 }
+
+if (isset($_GET['SearchUsers'])) {
+    if (!empty($_POST['pincode'])) {  
+        $pincode = trim($_POST['pincode']); // Get pincode from form
+
+        $result = searchUsersByPincode($pincode); // Call function to get users
+
+        if ($result !== false) {
+            // Redirect back to the same page (or to the results page)
+            header("Location: " . $_SERVER['HTTP_REFERER']);
+            exit();
+        } else {
+            echo "No users found for this pincode."; // Display error message if no users found
+            exit;
+        }
+    } else {
+        showError('pincode'); // Call error function if input is empty
+        exit;
+    }
+}
+
 
 if (isset($_GET['action']) && $_GET['action'] == "search_users") {
     $pincode = $_GET['pincode'];

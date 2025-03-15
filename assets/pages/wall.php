@@ -18,6 +18,7 @@
                 
                 foreach ($posts as $post){
                     $likes = getLikes($post['id']);
+                    $comments=getComments($post['id']);
                 ?>
                 <div class="card mt-4">
                     <div class="card-title d-flex justify-content-between align-items-center">
@@ -29,7 +30,7 @@
                             <i class="bi bi-three-dots-vertical"></i>
                         </div>
                     </div>
-                    <img src="assets/images/posts/<?=$post['post_img']?>" class="" alt="...">
+                    <img src="assets/images/posts/<?=$post['post_img']?>" class="card-img-top" style="width: 100%; height: auto; object-fit: cover;" alt="Post Image">
                     <div class="card-body">
                         <!-- Post Text -->
                         <?php if ($post['post_txt']) { ?>
@@ -61,17 +62,31 @@
                             ?>
                             <i class="fa fa-heart unlike_btn" style="display:<?=$unlike_btn_display?>" data-post-id="<?=$post['id']?>"></i>
                             <i class="far fa-heart like_btn" style="display:<?=$like_btn_display?>" data-post-id="<?=$post['id']?>"></i>
+                            <a href="#" data-toggle="modal" data-target="#likes<?=$post['id']?>" class="p-1 " style="text-decoration: none; color: inherit; cursor: pointer;">
+                            <?=count($likes)?> 
+                        </a>
                         </span>
-                        &nbsp;&nbsp;<i class="far fa-comment"></i><br>
+                        &nbsp;&nbsp;
+                        <a href="#" data-toggle="modal" data-target="#comments<?=$post['id']?>" class="p-1 " style="text-decoration: none; color: inherit; cursor: pointer;">
+                            <i class="far fa-comment"></i>
+                            <?=count($comments)?>
+                        </a><br>
                     </h4>
-                
-                    <a href="#" data-toggle="modal" data-target="#likes<?=$post['id']?>" class="p-1 mx-2" style="text-decoration: none; color: inherit;">
-                        <?=count($likes)?> likes
-                    </a>
+                    <span>
+                        
+                        
+                    </span>
+
+                    
                 
                     <div class="input-group p-2 border-top">
-                        <input type="text" class="form-control rounded-0 border-0" placeholder="Say something..." aria-label="Recipient's username" aria-describedby="button-addon2">
-                        <button class="btn btn-outline-primary rounded-0 border-0" type="button" id="button-addon2">Post</button>
+                        <form method="post" action="assets/php/actions.php?addComment">
+                            <input type="hidden" name="post_id" value="<?= $post['id'] ?>">
+                            <div class="d-flex align-items-center">
+                                <textarea class="form-control me-2" name="post_text" rows="1" placeholder="Write a comment..." style="resize: none;"></textarea>
+                                <button type="submit" class="btn btn-primary mx-2">Comment</button>
+                            </div>
+                        </form>
                     </div>
                 
                     <div class="modal fade" id="likes<?=$post['id']?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -121,6 +136,61 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="modal fade" id="comments<?=$post['id']?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Comments</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body" style="max-height: 500px;">
+                                    <div class="col-md-12 d-flex flex-column">
+                                        <!-- Comments Section -->
+                                        <div class="flex-grow-1 overflow-auto p-3 border rounded" style="max-height: 400px; overflow-y: auto;">
+                                            <?php 
+                                                $comments = getComments($post['id']);
+                                                if (empty($comments)) {
+                                                    echo '<p class="text-center text-muted">No comments yet.</p>';
+                                                } else {
+                                                    foreach ($comments as $comment) {
+                                                        echo '<div class="d-flex mb-3 p-2 bg-white rounded">';
+                                                        echo '<img class="rounded-circle me-2" width="35" height="35" src="assets/images/profile/' . htmlspecialchars($comment['profile_pic']) . '" alt="Profile">';
+                                                        echo '<div>';
+                                                        echo '<a href="?u=' . urlencode($comment['uname']) . '" class="text-decoration-none text-dark">';
+                                                        echo '<strong class="text-dark mx-2">' . htmlspecialchars($comment['fname'] . " " . $comment['lname']) . '</strong>';
+                                                        echo '<span class="text-muted mx-1">@' . htmlspecialchars($comment['uname']) . '</span>';
+                                                        echo '</a>';
+                                                        echo '<p class="mb-1 mx-2">' . htmlspecialchars($comment['comment']) . '</p>';
+                                                        echo '<small class="text-muted mx-4">' . htmlspecialchars($comment['created_at']) . '</small>';
+                                                        echo '</div>';
+                                                        echo '</div>';
+
+                                                    }
+                                                }
+                                            ?>
+                                        </div>
+
+                                        <!-- Add Comment Section -->
+                                        <div class="p-3 border-top bg-white rounded">
+                                            <form method="post" action="assets/php/actions.php?addComment">
+                                                <input type="hidden" name="post_id" value="<?= $post['id'] ?>">
+                                                <div class="d-flex align-items-center">
+                                                    <textarea class="form-control me-2" name="post_text" rows="1" placeholder="Write a comment..." style="resize: none;"></textarea>
+                                                    <button type="submit" class="btn btn-primary mx-2">Comment</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>  
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
                 </div>
                 <?php } ?>
                 

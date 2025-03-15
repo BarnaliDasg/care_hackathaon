@@ -153,46 +153,54 @@ $(document).on("submit", "#commentForm", function (e) {
 });
 
 //search
-$(document).ready(function() {
-    $("#search_btn").click(function() {
-        let pincode = $("#search_pincode").val().trim();
+$(document).ready(function () {
+    $("#pincodeSearchForm").submit(function (event) {
+        event.preventDefault(); // Prevent page reload
 
-        if (pincode === "") {
-            $("#searchResults").html("<p class='text-danger'>Please enter a valid pincode</p>");
+        var pincode = $("#pincodeInput").val().trim();
+
+        if (pincode.length === 0) {
+            $("#searchResults").html('<p class="text-danger">Please enter a pincode.</p>');
             return;
         }
 
         $.ajax({
-            url: "search_users.php",
-            type: "POST",
-            data: { pincode: pincode },
+            url: "assets/php/ajax.php?searchPincode",
+            method: "POST",
             dataType: "json",
-            success: function(response) {
-                if (response.status === "error") {
-                    $("#searchResults").html(`<p class='text-danger'>${response.message}</p>`);
-                } else {
-                    let userList = "<ul class='list-group'>";
-                    response.users.forEach(user => {
-                        userList += `
-                            <li class='list-group-item'>
-                                <img src='${user.profile_pic}' alt='Profile' class='rounded-circle' width='40'>
-                                ${user.fname} ${user.lname}
-                            </li>
-                        `;
+            data: { pincode: pincode },
+            success: function (response) {
+                if (response.status) {
+                    var usersHTML = "";
+                    $.each(response.users, function (index, user) {
+                        usersHTML += `
+                            <div class="d-flex justify-content-between">
+                                <div class="d-flex align-items-center p-2">
+                                    <img src="assets/images/profile/${user.profile_pic}" alt="" height="40" width="40" class="rounded-circle border">
+                                    <div>&nbsp;&nbsp;</div>
+                                    <a href="?u=${user.uname}" class="text-decoration-none text-dark">
+                                        <div class="d-flex flex-column justify-content-center">
+                                            <h6 style="margin: 0px; font-size: small;">${user.fname} ${user.lname}</h6>
+                                            <p style="margin:0px; font-size:small" class="text-muted">@${user.uname}</p>
+                                            <h6 style="margin: 0px; font-size: small; padding: 2px 5px; background-color:rgb(154, 189, 224); display: inline-block;">
+                                                ${user.role}
+                                            </h6>
+
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>`;
                     });
-                    userList += "</ul>";
-                    $("#searchResults").html(userList);
+
+                    $("#searchResults").html(usersHTML);
+                } else {
+                    $("#searchResults").html('<p class="text-muted">No users found for this pincode.</p>');
                 }
-            },
-            error: function() {
-                $("#searchResults").html("<p class='text-danger'>Something went wrong</p>");
+
+                $("#userSearchModal").modal("show"); // Show modal dynamically
             }
         });
     });
 });
-
-
-
-
 
 
