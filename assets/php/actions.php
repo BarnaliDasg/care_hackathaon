@@ -244,5 +244,4 @@ if (isset($_GET['action']) && $_GET['action'] == "search_users") {
     exit;
 }
 
-
 ?>

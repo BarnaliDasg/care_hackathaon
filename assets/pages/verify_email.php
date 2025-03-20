@@ -5,7 +5,7 @@ $verificationCode = $_SESSION['code'];
 
 <div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
     
-        <form method="post" action="assets/php/actions.php?verify_email" style="width: 70%; max-width: 600px; box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2); border-radius: 10px; padding: 20px;">
+        <form method="post" action="assets/php/actions.php?verify_email" style="width: 70%; max-width: 600px; box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2); border-radius: 10px; padding: 20px; background-color: white;">
             <h1 class="h5 mb-3 fw-normal text-center">Verify Your Email (<?= htmlspecialchars($user['email']) ?>)</h1>
             <p class="text-center">Enter the 6-digit code sent to you</p>
 
@@ -37,3 +37,4 @@ $verificationCode = $_SESSION['code'];
         </form>
     
 </div>
+

@@ -179,42 +179,30 @@ function isUserRegisteredbyOther($uname) {
 function createUser($data) {
     global $db;
 
-    // Allowed roles
-    $allowed_roles = ['caregiver', 'careseeker'];
-
     // Sanitize inputs
     $fname = mysqli_real_escape_string($db, $data['fname']);
     $lname = mysqli_real_escape_string($db, $data['lname']);
-    $gender = intval($data['gender']); // Ensure gender is an integer
+    $role = mysqli_real_escape_string($db, $data['role']);
+    $gender = intval($data['gender']);
     $email = mysqli_real_escape_string($db, $data['email']);
     $uname = mysqli_real_escape_string($db, $data['uname']);
     $password = mysqli_real_escape_string($db, $data['password']);
-    $role = mysqli_real_escape_string($db, $data['role']);
-    $dob = mysqli_real_escape_string($db, $data['dob']); // Sanitize dob
+    $dob = mysqli_real_escape_string($db, $data['dob']);
+    $phone = mysqli_real_escape_string($db, $data['phone']);
+    $address = mysqli_real_escape_string($db, $data['address']);
+    $state = mysqli_real_escape_string($db, $data['state']);
+    $pincode = mysqli_real_escape_string($db, $data['pincode']);
 
-    // Validate role
-    if (!in_array($role, $allowed_roles)) {
-        return ['status' => 'error', 'message' => 'Invalid role selected.'];
-    }
-
-    // Validate DOB format (YYYY-MM-DD)
-    if (!preg_match("/^\d{4}-\d{2}-\d{2}$/", $dob)) {
-        return ['status' => 'error', 'message' => 'Invalid date format. Use YYYY-MM-DD.'];
-    }
-
-    // Hash password using MD5 (Consider using password_hash for better security)
+    // Hash password using md5 (but bcrypt is recommended for security)
     $password = md5($password);
 
-    // Insert into database
-    $query = "INSERT INTO user (fname, lname, gender, email, uname, password, role, dob) 
-              VALUES ('$fname', '$lname', $gender, '$email', '$uname', '$password', '$role', '$dob')";
+    // Insert user into the database (excluding profile_pic)
+    $query = "INSERT INTO user (fname, lname, role, gender, email, uname, password, dob, phone, address, state, pincode) 
+              VALUES ('$fname', '$lname', '$role', $gender, '$email', '$uname', '$password', '$dob', '$phone', '$address', '$state', '$pincode')";
 
-    if (mysqli_query($db, $query)) {
-        return ['status' => 'success', 'message' => 'User created successfully.'];
-    } else {
-        return ['status' => 'error', 'message' => 'Database insertion failed.'];
-    }
+    return mysqli_query($db, $query);
 }
+
 
 
 

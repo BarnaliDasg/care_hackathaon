@@ -1,4 +1,4 @@
-<?php
+<?php 
 require __DIR__ . '/../../vendor/autoload.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
@@ -48,4 +48,4 @@ function sendcode($email, $subject, $code) {
 
 // Example usage
 //sendcode("recipient@example.com", "Your Verification Code","123456");
-?>
+?> 
