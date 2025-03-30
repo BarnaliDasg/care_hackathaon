@@ -587,9 +587,6 @@ function getPostbyId($u_id) {
 }
 
 //add comment
-
-
-
 function addComment($post_id, $comment_text) {
     global $db;
     $user_id = $_SESSION['userdata']['id'];
@@ -622,6 +619,7 @@ function getComments($post_id) {
     return mysqli_fetch_all($result, MYSQLI_ASSOC);
 }
 
+
 //search user by pincode
 function searchUsersByPincode($pincode) {
     global $db;
@@ -638,10 +636,39 @@ function searchUsersByPincode($pincode) {
     }
     return $users;
 }
+// Add Message (Similar to addComment)
+function addMessage($receiver_id, $message_text) {
+    global $db;
+    $sender_id = $_SESSION['userdata']['id'];
+    
+    $receiver_id = intval($receiver_id);
+    $text = mysqli_real_escape_string($db, trim($message_text));
+
+    $query = "INSERT INTO chats (sender_id, receiver_id, message) VALUES ('$sender_id', '$receiver_id', '$text')";
+    
+    return mysqli_query($db, $query) ? true : mysqli_error($db);
+}
 
 
+// Get Messages (Similar to getComments)
+function getMessages($receiver_id) {
+    global $db;
+    $sender_id = $_SESSION['userdata']['id'];
 
+    $query = "SELECT messages.id, messages.sender_id, messages.receiver_id, messages.message, messages.created_at, 
+                     sender.fname AS sender_fname, sender.lname AS sender_lname, sender.uname AS sender_uname, sender.profile_pic AS sender_pic,
+                     receiver.fname AS receiver_fname, receiver.lname AS receiver_lname, receiver.uname AS receiver_uname, receiver.profile_pic AS receiver_pic
+              FROM chats 
+              JOIN user AS sender ON sender.id = messages.sender_id 
+              JOIN user AS receiver ON receiver.id = messages.receiver_id 
+              WHERE (messages.sender_id = ? AND messages.receiver_id = ?) 
+                 OR (messages.sender_id = ? AND messages.receiver_id = ?) 
+              ORDER BY messages.id ASC";
 
+    $stmt = mysqli_prepare($db, $query);
+    mysqli_stmt_bind_param($stmt, "iiii", $sender_id, $receiver_id, $receiver_id, $sender_id);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
 
-
-?>
+    return mysqli_fetch_all($result, MYSQLI_ASSOC);
+}

@@ -101,7 +101,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['post_id'], $_POST['com
     exit;
 }
 
-//search
 // Search Users by Pincode
 if (isset($_GET['searchPincode'])) {
     require_once __DIR__ . '/../php/actions.php';
@@ -122,6 +121,44 @@ if (isset($_GET['searchPincode'])) {
     exit;
 }
 
+//message
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['receiver_id'], $_POST['message_text'])) {
+    $receiver_id = $_POST['receiver_id'];
+    $sender_id = $_SESSION['user_id'] ?? null;
+    $message_text = trim($_POST['message_text']);
+
+    // 🔍 Debugging - Log received data
+    file_put_contents("debug_log.txt", "Received: receiver_id=$receiver_id, sender_id=$sender_id, message_text=$message_text\n", FILE_APPEND);
+
+    if (!$sender_id) {
+        echo json_encode(["status" => "error", "message" => "User not logged in."]);
+        exit;
+    }
+
+    if (empty($message_text)) {
+        echo json_encode(["status" => "error", "message" => "Message cannot be empty."]);
+        exit;
+    }
+
+    // 🔍 Debugging - Check SQL Query
+    $stmt = $db->prepare("INSERT INTO messages (sender_id, receiver_id, message) VALUES (?, ?, ?)");
+    if (!$stmt) {
+        file_put_contents("debug_log.txt", "SQL Prepare Failed: " . $db->error . "\n", FILE_APPEND);
+        echo json_encode(["status" => "error", "message" => "SQL Prepare Failed"]);
+        exit;
+    }
+
+    $stmt->bind_param("iis", $sender_id, $receiver_id, $message_text);
+    if ($stmt->execute()) {
+        file_put_contents("debug_log.txt", "Message Inserted Successfully!\n", FILE_APPEND);
+        echo json_encode(["status" => "success"]);
+    } else {
+        file_put_contents("debug_log.txt", "SQL Execute Failed: " . $stmt->error . "\n", FILE_APPEND);
+        echo json_encode(["status" => "error", "message" => "Failed to send message."]);
+    }
+
+    exit;
+}
 
 
 

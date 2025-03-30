@@ -203,4 +203,38 @@ $(document).ready(function () {
     });
 });
 
+//messages|
+$(document).on("submit", "#messageForm", function (e) {
+    e.preventDefault();
+
+    let receiver_id = $(this).data("receiver-id");
+    let message_text = $(this).find("textarea").val().trim();
+
+    if (!message_text) {
+        alert("Message cannot be empty!");
+        return;
+    }
+
+    $.ajax({
+        url: "ajax.php",
+        type: "POST",
+        data: { receiver_id: receiver_id, message_text: message_text },
+        dataType: "json",
+        success: function (response) {
+            console.log(response); // Debugging
+            if (response.status === "success") {
+                alert("Message sent successfully!");
+                location.reload();
+            } else {
+                alert(response.message);
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error("AJAX Error: ", status, error);
+        }
+    });
+});
+
+
+
 

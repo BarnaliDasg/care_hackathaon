@@ -14,7 +14,7 @@ global $user;
                 <div class="d-flex gap-3 align-items-center">
                     <span style="font-size: xx-large;"><?=$profile['fname']?> <?=$profile['lname']?></span>
                     
-                    <span style="font-size: large; " class="mx-3 badge bg-secondary">
+                    <span style="font-size: large; background-color: aliceblue; " class="mx-3 badge" >
                         <?= ($profile['role'] == 'caregiver') ? 'Caregiver' : 'Care Seeker'; ?>
                     </span>
             </div>
@@ -29,7 +29,7 @@ global $user;
                             <i class="fas fa-ellipsis-h"></i>  <!-- Three dots -->
                         </span>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                            <a class="dropdown-item" href="#"><i class="fas fa-comment"></i> Message</a>
+                            <a class="dropdown-item" href="assets/pages/chat.php?receiver_id=<?= $profile['id'] ?>"><i class="fas fa-comment"></i> Message</a>
                             <a class="dropdown-item text-danger" href="#"><i class="fas fa-ban"></i> Block</a>
                         </div>
                     </div>
@@ -82,7 +82,7 @@ global $user;
                                 <div class="row">
                                     <!-- Left Side: Image & Post Details -->
                                     <div class="col-md-6">
-                                        <img src="assets/images/posts/<?=$post['post_img']?>" class="img-fluid rounded" alt="Post Image" style="height: 500px;">
+                                        <img src="assets/images/posts/<?=$post['post_img']?>" class="img-fluid rounded" alt="Post Image" style="width: 500px;">
                                         
                                         <!-- Post Details -->
                                         <div class="mt-3 p-3 border rounded bg-light">
@@ -126,7 +126,7 @@ global $user;
                                         </div>
 
                                         <!-- Comments Section -->
-                                        <div class="flex-grow-1 overflow-auto p-3 border rounded" style="height: 600px;">
+                                        <div class="flex-grow-1 overflow-auto p-3 border rounded" style="height: 300px;">
                                             <?php 
                                                 $comments = getComments($post['id']);
                                                 foreach ($comments as $comment) {

@@ -99,7 +99,7 @@
                 </div>
             </div>
 
-            <button type="submit" class="btn btn-primary mt-3" style="width: 100%; background-color: #e7c1fd; color: rgb(15, 43, 127);">Submit</button>
+            <button type="submit" class="btn btn-primary mt-3" style="width: 100%;">Submit</button>
             
             <div style="text-align: center; margin-top: 5px;">
                 <a href="?login" class="text-decoration-none">Already have an account?</a>

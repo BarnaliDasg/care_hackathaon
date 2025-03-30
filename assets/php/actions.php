@@ -33,9 +33,15 @@ if (isset($_GET['login'])) {
             $code = rand(111111, 999999);
             $_SESSION['code'] = $code;
             sendCode($response['user']['email'], 'Verify your email', $code);
+            header("Location: ../../?verify");
+            exit();
+        } elseif ($response['user']['ac_status'] == 3) {
+            header("Location: /care/assets/pages/admin.php");
+
+            exit();
         }
 
-        header("Location: ../../?verify");
+        header("Location: ../../");
         exit();
     } else {
         $_SESSION['formdata'] = $_POST;
@@ -44,6 +50,7 @@ if (isset($_GET['login'])) {
         exit();
     }
 }
+
 
 // For verifying email
 if (isset($_GET['verify_email'])) {
@@ -197,7 +204,7 @@ if (isset($_GET['addpost'])) {
 
 }
 
-
+//add comment
 if (isset($_GET['addComment'])) {
     if (!empty($_POST['post_text']) && !empty($_POST['post_id'])) {  
         $post_id = $_POST['post_id']; // Get post_id from form
@@ -217,6 +224,7 @@ if (isset($_GET['addComment'])) {
     }
 }
 
+//search
 if (isset($_GET['SearchUsers'])) {
     if (!empty($_POST['pincode'])) {  
         $pincode = trim($_POST['pincode']); // Get pincode from form
@@ -243,5 +251,26 @@ if (isset($_GET['action']) && $_GET['action'] == "search_users") {
     echo json_encode(getUsersByPincode($pincode));
     exit;
 }
+// Messages
+if (isset($_GET['addMessage'])) {
+    if (!empty($_POST['message_text']) && !empty($_POST['receiver_id'])) {  
+        $receiver_id = $_POST['receiver_id']; // Get receiver ID from form
+        $result = addMessage($receiver_id, $_POST['message_text']);
+
+        if ($result === true) {
+            // Redirect back to the same page
+            header("Location: " . $_SERVER['HTTP_REFERER']);
+            exit();
+        } else {
+            echo $result; // Display error message if any
+            exit;
+        }
+    } else {
+        showError('message_text'); // Call error function
+        exit;
+    }
+}
+
+
 
 ?>

@@ -39,7 +39,12 @@ if (isset($_SESSION['Auth']) && $user && $user['ac_status'] == 1 && !$pageCount)
     showPage('blocked');
     showPage('footer');
 
-} elseif (isset($_GET['signup'])) {
+}elseif (isset($_SESSION['Auth']) && $user && $user['ac_status'] == 3 && !$pageCount) {
+    showPage('header', ['page_title' => 'Admin']);
+    showPage('admin');
+    showPage('footer');
+
+}  elseif (isset($_GET['signup'])) {
     showPage('header', ['page_title' => 'SignUp']);
     showPage('signup');
     showPage('footer');

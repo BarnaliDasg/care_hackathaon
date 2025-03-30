@@ -11,8 +11,8 @@ if (isset($_SESSION['forgot_code']) && !isset($_SESSION['auth_temp'])) {
 ?>
 
 <div class="login d-flex justify-content-center align-items-center" style="height: 100vh;">
-    <div style="width: 70%; max-width: 600px; box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2); border: 1px solid #ddd; border-radius: 10px;" class="col-4 bg-white border rounded p-4">
-        <form method="post" action="assets/php/actions.php?<?=$action?>">
+    <div style=" background: white; width: 60%; max-width: 600px; box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2); border-radius: 10px; padding: 20px;">
+        <form method="post" action="assets/php/actions.php?<?=$action?>" >
             <h1 class="h5 mb-3 fw-normal text-center">Forgot Your Password?</h1>
             
             <?php 
@@ -24,7 +24,7 @@ if (isset($_SESSION['forgot_code']) && !isset($_SESSION['auth_temp'])) {
                     <label for="floatingInput">Enter your email</label>
                 </div>
                 <?=showError('email')?>
-                <button style="width: 100%;background-color: #e7c1fd; color: rgb(15, 43, 127);" class="btn btn-primary" type="submit">Send Verification Code</button>
+                <button  style="width:100%" class="btn btn-primary" type="submit">Send Verification Code</button>
             <?php 
             } 
             ?>
@@ -66,5 +66,5 @@ if (isset($_SESSION['forgot_code']) && !isset($_SESSION['auth_temp'])) {
             <br>
             <a href="?login" class="text-decoration-none mt-3 d-block text-center"><i class="bi bi-arrow-left-circle-fill"></i> Go Back To Login</a>
         </form>
-    </div>
+    </>
 </div>

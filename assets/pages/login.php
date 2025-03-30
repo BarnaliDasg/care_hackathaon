@@ -23,7 +23,7 @@
         <?= showError('checkUser') ?>
 
         <!-- Login Button -->
-        <button style="width: 100%; background-color: #e7c1fd; color: rgb(15, 43, 127);" type="submit" class="btn btn-primary mt-4">Login</button>
+        <button type="submit" class="btn btn-primary mt-4" style="width:100%">Login</button>
 
         <!-- Links in Single Line -->
         <div class="text-center mt-3">

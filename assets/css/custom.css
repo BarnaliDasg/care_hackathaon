@@ -1,4 +1,32 @@
 body {
-    background: linear-gradient(to right, #ffd1d1, #ebeefc);
+    background: linear-gradient(to right, #ffd1d1, #d5dcf9);
 }
+
+button, .btn {
+    background: linear-gradient(135deg, #e096f9, #7bffdeb5); /* Warm peach to soft aqua */
+    border: 1px solid rgba(0, 0, 0, 0.508);
+    color: #3D3D3D; /* Soft charcoal for better contrast */
+    padding: 8px 15px;
+    font-size: 12px;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  button:hover, .btn:hover {
+    background: linear-gradient(135deg, #bb82cb, #4bbda4); /* Slightly richer pastel shades */
+    transform: translateY(-2px);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+  }
+  
+  button:active, .btn:active {
+    transform: translateY(1px);
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+
+  
+  
 
