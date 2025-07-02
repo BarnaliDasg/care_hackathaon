@@ -75,4 +75,4 @@ Watch the full walkthrough video here:
 
 1. Clone this repository:
    ```bash
-   git clone https://github.com/BarnaliDasg/care_hackathaon.git
+   git clone https://github.com/BarnaliDasg/care.git
