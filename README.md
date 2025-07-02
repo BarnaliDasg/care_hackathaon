@@ -42,7 +42,7 @@ Originally inspired during the development of a general social platform called *
 ## 📽️ Demo
 
 Watch the full walkthrough video here:  
-[📎 Video Demo Link](#) *(Add your YouTube or Google Drive link here)*
+[📎 Video Demo Link](https://www.linkedin.com/posts/barnali-das-g3_webdevelopment-studentproject-php-activity-7346097441080807425-jPuS?utm_source=share&utm_medium=member_desktop&rcm=ACoAADeuNNQBqzkW2DfRniAfYHaYFhwKLo90XC0) *(Add your YouTube or Google Drive link here)*
 
 ---
 
