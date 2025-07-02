@@ -40,7 +40,7 @@ if (isset($_SESSION['forgot_code']) && !isset($_SESSION['auth_temp'])) {
                 </div>
                 <?=showError('email_verify')?>
 
-                <p class="text-center text-danger">Your verification code: <strong><?= htmlspecialchars($_SESSION['forgot_code']) ?></strong></p>
+                <!-- <p class="text-center text-danger">Your verification code: <strong><?= htmlspecialchars($_SESSION['forgot_code']) ?></strong></p> -->
 
 
                 <button style="width: 100%;background-color: #e7c1fd; color: rgb(15, 43, 127);" class="btn btn-primary" type="submit">Verify Code</button>

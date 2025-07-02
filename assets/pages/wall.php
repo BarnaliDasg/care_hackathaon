@@ -30,7 +30,10 @@
                             <i class="bi bi-three-dots-vertical"></i>
                         </div>
                     </div>
-                    <img src="assets/images/posts/<?=$post['post_img']?>" class="card-img-top" style="width: 100%; height: auto; object-fit: cover;" alt="Post Image">
+                    <img src="assets/images/posts/<?=$post['post_img']?>" 
+                        class="card-img-top" 
+                        style="max-height: 500px; width: 100%; object-fit: contain; display: block; margin: 0 auto;" 
+                        alt="Post Image">
                     <div class="card-body">
                         <!-- Post Text -->
                         <?php if ($post['post_txt']) { ?>

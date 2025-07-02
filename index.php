@@ -40,8 +40,7 @@ if (isset($_SESSION['Auth']) && $user && $user['ac_status'] == 1 && !$pageCount)
     showPage('footer');
 
 }elseif (isset($_SESSION['Auth']) && $user && $user['ac_status'] == 3 && !$pageCount) {
-    showPage('header', ['page_title' => 'Admin']);
-    showPage('navbar');
+    showPage('header', ['page_title' => 'Admin Panel']);
     showPage('admin');
     showPage('footer');
 
@@ -95,6 +94,11 @@ if (isset($_SESSION['Auth']) && $user && $user['ac_status'] == 1 && !$pageCount)
     showPage('about_us');
     showPage('footer');
 
+}else if ($pageCount === 0) {
+    showPage('header', ['page_title' => 'Login']);
+    showPage('login');
+    showPage('footer');
+    exit;
 } else {
     if (isset($_SESSION['Auth']) && $user && $user['ac_status'] == 1) {
         showPage('header', ['page_title' => 'Home']);

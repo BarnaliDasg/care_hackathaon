@@ -1,4 +1,9 @@
 <?php
+ob_start(); // Prevents early output
+
+header('Content-Type: application/json'); // AJAX expects JSON
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
 // Include configuration and functions
 require_once 'configu.php'; // Ensure this file sets up the database connection
 require_once 'functions.php';
@@ -12,31 +17,23 @@ if (!$db) {
 // Follow User
 if (isset($_GET['follow'])) {
     $u_id = $_POST['u_id'];
-    $response = ['status' => false]; // Default response
-
-    if (followUser($u_id)) {
-        $response['status'] = true;
-    }
-
-    echo json_encode($response);
+    $status = followUser($u_id);
+    echo json_encode(["status" => $status ? true : false]);
+    exit;
 }
 
 // Unfollow User
 if (isset($_GET['unfollow'])) {
     $u_id = $_POST['u_id'];
-    $response = ['status' => false]; // Default response
+    $status = unfollowUser($u_id); // assume this is your existing function
 
-    if (unfollowUser($u_id)) {
-        $response['status'] = true;
-    }
-
-    echo json_encode($response);
+    echo json_encode(["status" => $status ? true : false]);
+    exit;
 }
 
 // Like Post
 if (isset($_GET['like'])) {
     $post_id = $_POST['post_id'];
-    $response = ['status' => false]; // Default response
 
     if (!checklikeStatus($post_id)) {
         if (like($post_id)) {
@@ -45,12 +42,12 @@ if (isset($_GET['like'])) {
     }
 
     echo json_encode($response);
+    exit;
 }
 
 // Unlike Post
 if (isset($_GET['unlike'])) {
     $post_id = $_POST['post_id'];
-    $response = ['status' => false]; // Default response
 
     if (checklikeStatus($post_id)) {
         if (unlike($post_id)) {
@@ -59,7 +56,11 @@ if (isset($_GET['unlike'])) {
     }
 
     echo json_encode($response);
+    exit;
 }
+
+
+
 
 // ADD COMMENT
 
@@ -160,7 +161,55 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['receiver_id'], $_POST[
     exit;
 }
 
+//edit, delete
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $action = $_POST['action'] ?? '';
+    $table = $_POST['table'] ?? '';
+    if (!$table || !preg_match('/^[a-zA-Z0-9_]+$/', $table)) {
+        echo json_encode(['success' => false, 'message' => 'Invalid table name']);
+        exit;
+    }
+
+    if ($action === 'update') {
+        $data = $_POST;
+        unset($data['action'], $data['table']);
+
+        $id = $data['id'] ?? null;
+        if (!$id) {
+            echo json_encode(['success' => false, 'message' => 'Missing ID']);
+            exit;
+        }
+
+        $updates = [];
+        foreach ($data as $key => $value) {
+            $updates[] = "`$key` = ?";
+        }
+        $sql = "UPDATE `$table` SET " . implode(', ', $updates) . " WHERE id = ?";
+        $stmt = $conn->prepare($sql);
+        $params = array_values($data);
+        $params[] = $id;
+
+        if ($stmt->execute($params)) {
+            echo json_encode(['success' => true]);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Update failed']);
+        }
+
+    } elseif ($action === 'delete') {
+        $id = $_POST['id'] ?? '';
+        $stmt = $conn->prepare("DELETE FROM `$table` WHERE id = ?");
+        if ($stmt->execute([$id])) {
+            echo json_encode(['success' => true]);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Delete failed']);
+        }
+
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Invalid action']);
+    }
+} else {
+    echo json_encode(['success' => false, 'message' => 'Invalid request']);
+}
 
 
-
-
+ 

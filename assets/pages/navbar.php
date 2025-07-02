@@ -35,10 +35,11 @@
         <ul class="navbar-nav mb-2 mb-lg-0">
             <!-- Home -->
             <li class="nav-item mx-2">
-                <a class="nav-link" href="?home" aria-label="Home">
+                <a class="nav-link" href="?">
                     <i class="fas fa-home fa-2x"></i>
                 </a>
             </li>
+
 
             <!-- Add Post Icon -->
             <li class="nav-item mx-2">

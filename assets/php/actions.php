@@ -1,7 +1,7 @@
 <?php
 require_once 'functions.php';
 require_once 'send_code.php';
-
+header('Content-Type: application/json');
 // For managing signup
 if (isset($_GET['signup'])) {
     $response = validateSignupForm($_POST);
@@ -270,6 +270,76 @@ if (isset($_GET['addMessage'])) {
         exit;
     }
 }
+
+//admin actions
+$action = $_POST['action'] ?? '';
+if ($action === 'get_table_data') {
+    $table = $_POST['table'] ?? '';
+    if (!$table) {
+        echo json_encode(['status' => 'error', 'message' => 'No table specified']);
+        exit;
+    }
+    $data = getTableData($table);
+    if (!$data) {
+        echo json_encode(['status' => 'error', 'message' => 'Error loading table data']);
+        exit;
+    }
+    echo json_encode([
+        'status' => 'success',
+        'columns' => $data['columns'],
+        'rows' => $data['rows']
+    ]);
+    exit;
+} elseif ($action === 'edit_row') {
+    $table = $_POST['table'] ?? '';
+    $id = $_POST['id'] ?? '';
+    $updates = json_decode($_POST['updates'] ?? '{}', true);
+
+    // Basic validation - no whitelist, but check presence
+    if (!$table || !$id || !is_array($updates) || empty($updates)) {
+        echo json_encode(['status' => 'error', 'message' => 'Missing or invalid edit data']);
+        exit;
+    }
+
+    $db = getDbConnection();
+
+    // Escape inputs and prepare update parts
+    $setParts = [];
+    foreach ($updates as $column => $value) {
+        $column = mysqli_real_escape_string($db, $column);
+        $value = mysqli_real_escape_string($db, $value);
+        $setParts[] = "`$column` = '$value'";
+    }
+
+    $id = mysqli_real_escape_string($db, $id);
+    $sql = "UPDATE `$table` SET " . implode(', ', $setParts) . " WHERE id = '$id'";
+
+    if (mysqli_query($db, $sql)) {
+        echo json_encode(['status' => 'success']);
+    } else {
+        echo json_encode(['status' => 'error', 'message' => 'Database error: ' . mysqli_error($db)]);
+    }
+
+    exit;
+} elseif ($action === 'delete_row') {
+    $table = $_POST['table'] ?? '';
+    $id = $_POST['id'] ?? ''; // <-- this must be the actual database ID
+
+    if (!$table || !$id) {
+        echo json_encode(['status' => 'error', 'message' => 'Missing data for delete']);
+        exit;
+    }
+
+    if (deleteRow($table, $id)) {
+        echo json_encode(['status' => 'success', 'message' => 'Row deleted successfully']);
+    } else {
+        echo json_encode(['status' => 'error', 'message' => 'Error deleting row']);
+    }
+
+    exit;
+}
+
+// 
 
 
 

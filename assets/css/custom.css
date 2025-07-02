@@ -5,7 +5,7 @@ body {
 button, .btn {
     background: linear-gradient(135deg, #e096f9, #7bffdeb5); /* Warm peach to soft aqua */
     border: 1px solid rgba(0, 0, 0, 0.508);
-    color: #3D3D3D; /* Soft charcoal for better contrast */
+    color: #000000; /* Soft charcoal for better contrast */
     padding: 8px 15px;
     font-size: 12px;
     font-weight: bold;
@@ -26,123 +26,5 @@ button, .btn {
     box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
   }
   
-
-  #sidebar {
-    position: fixed;
-    left: -250px;
-    top: 0;
-    width: 250px;
-    height: 100%;
-    background-color: #1a1a1a;
-    color: gold;
-    overflow-y: auto;
-    transition: left 0.3s ease;
-    padding: 20px;
-    z-index: 1001;
-}
-
-#sidebar.active {
-    left: 0;
-}
-
-#sidebar h4 {
-    margin-top: 0;
-    border-bottom: 1px solid gold;
-    padding-bottom: 10px;
-}
-
-#sidebar ul {
-    padding-left: 0;
-    margin: 0;
-}
-
-#sidebar .nav-item {
-    margin: 10px 0;
-}
-
-#sidebar .nav-link {
-    color: gold;
-    text-decoration: none;
-    font-weight: bold;
-    display: block;
-    padding: 6px 10px;
-    border-radius: 5px;
-}
-
-#sidebar .nav-link:hover {
-    background-color: gold;
-    color: #111;
-}
-
-/* Close button */
-.close-btn {
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    font-size: 28px;
-    cursor: pointer;
-    color: gold;
-}
-/* Overlay */
-#overlay {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    background-color: rgba(0,0,0,0.5);
-    z-index: 1000;
-}
-/* Table styling */
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-}
-
-table, th, td {
-    border: 1px solid gold;
-}
-
-th, td {
-    padding: 10px;
-    text-align: left;
-}
-
-th {
-    background-color: #222;
-    color: gold;
-}
-
-td {
-    background-color: #1c1c1c;
-    color: #f9f9f9;
-}
-/* Modal background */
-#editModal {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.6);
-  z-index: 9999;
-  overflow: auto;
-}
-
-/* Modal content box */
-#editModal .modal-content {
-  background: #fff;
-  margin: 5% auto;
-  padding: 20px;
-  width: 90%;
-  max-width: 600px;
-  max-height: 90vh;
-  overflow-y: auto;
-  border-radius: 8px;
-  position: relative;
-}
 
 
